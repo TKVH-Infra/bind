@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bind
+  labels:
+    app: bind
+    part-of: bind
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bind
+      part-of: bind
+  template:
+    metadata:
+      labels:
+        app: bind
+        part-of: bind
+    spec:
+      serviceAccountName: bind
+      containers:
+      - name: bind
+        image: cytopia/bind
+        env:
+        - name: DEBUG_ENTRYPOINT
+          value: "2"
+        - name: DOCKER_LOGS
+          value: "1"
+        - name: ALLOW_QUERY
+          value: "any"
+        - name: WILDCARD_DNS
+          valueFrom:
+            secretKeyRef:
+              name: bind
+              key: WILDCARD_DNS
+        - name: DNS_FORWARDER
+          value: "1.1.1.1,1.0.0.1"
+        ports:
+        - name: bind
+          containerPort: 53
+          protocol: TCP
+        - containerPort: 53
+          protocol: UDP
+          name: bind-udp
+        volumeMounts:
+        - name: bind-secrets
+          mountPath: "/mnt/vault"
+          readOnly: true
+      volumes:
+      - name: bind-secrets
+        csi:
+          driver: "secrets-store.csi.k8s.io"
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "bind"

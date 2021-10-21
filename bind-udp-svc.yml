@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bind-udp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "sharing key"
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.0.60
+  selector:
+    app: bind
+    part-of: bind
+  ports:
+    - port: 53
+      targetPort: bind-udp
+      protocol: UDP
+  allocateLoadBalancerNodePorts: false
