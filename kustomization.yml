@@ -5,5 +5,4 @@ resources:
   - bind-deploy.yml
   - bind-svc.yml
   - bind-udp-svc.yml
-  - bind-spc.yml
-  - bind-sa.yml
+  - bind-ns.yml

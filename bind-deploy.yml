@@ -17,7 +17,6 @@ spec:
         app: bind
         part-of: bind
     spec:
-      serviceAccountName: bind
       containers:
       - name: bind
         image: cytopia/bind
@@ -29,10 +28,7 @@ spec:
         - name: ALLOW_QUERY
           value: "any"
         - name: WILDCARD_DNS
-          valueFrom:
-            secretKeyRef:
-              name: bind
-              key: WILDCARD_DNS
+          value: "home.lan=192.168.0.51"
         - name: DNS_FORWARDER
           value: "1.1.1.1,1.0.0.1"
         ports:
@@ -42,19 +38,8 @@ spec:
         - containerPort: 53
           protocol: UDP
           name: bind-udp
-        volumeMounts:
-        - name: bind-secrets
-          mountPath: "/mnt/vault"
-          readOnly: true
         resources:
           limits:
             memory: 64Mi
           requests:
             memory: 32Mi
-      volumes:
-      - name: bind-secrets
-        csi:
-          driver: "secrets-store.csi.k8s.io"
-          readOnly: true
-          volumeAttributes:
-            secretProviderClass: "bind"
