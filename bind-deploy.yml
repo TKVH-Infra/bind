@@ -28,7 +28,7 @@ spec:
         - name: ALLOW_QUERY
           value: "any"
         - name: WILDCARD_DNS
-          value: "home.lan=192.168.0.51"
+          value: "home.lan=192.168.1.51"
         - name: DNS_FORWARDER
           value: "1.1.1.1,1.0.0.1"
         ports:
